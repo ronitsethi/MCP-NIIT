@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "niit-learning-advisor": {
+      "command": "node",
+      "args": [
+        "/Users/ronitsethi/Documents/Antigravity/Niit/MCP NIIT/dist/index.js"
+      ],
+      "transportType": "stdio"
+    }
+  }
+}

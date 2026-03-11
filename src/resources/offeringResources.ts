@@ -1,0 +1,65 @@
+import type { ResourceContent } from "../types/common.js";
+
+export const offeringResources: Record<string, ResourceContent> = {
+  offering_management_knowledge: {
+    title: "Offering Management — Lifecycle & Best Practices",
+    domain: "offeringManagement",
+    overview:
+      "Explains the offering lifecycle from request to delivery, including creation, scheduling, rescheduling, and cancellation workflows. Covers what information is needed, who approves, and what downstream dependencies are triggered.",
+    whenThisApplies:
+      "Use this resource when a Learning Advisor asks about how offerings work, what the creation process involves, or what happens when offerings are rescheduled or cancelled. For actual offering operations, use the related tools.",
+    keyRules: [
+      "An offering is a specific instance of a course — it has dates, location, capacity, and enrollment.",
+      "Offering creation requires: confirmed course record, faculty assignment, venue/room booking (for F2F), hosting setup (for virtual), and workspace configuration.",
+      "Go/no-go decisions must be made at least 10 business days before the offering start date for face-to-face, and 5 business days for virtual.",
+      "Rescheduling an offering triggers notifications to all enrolled learners and coordinated updates to venue, faculty, and hosting.",
+      "Cancellation of an offering follows the cancellation policy and may trigger fee-related actions for enrolled external participants.",
+      "Each offering inherits the course-level configuration but can have offering-specific overrides (e.g., different venue, adjusted capacity).",
+    ],
+    commonMisconceptions: [
+      "Creating a course does not create an offering — these are separate steps.",
+      "Rescheduling is not the same as cancelling and recreating — rescheduling preserves enrollment.",
+      "Faculty assignment is a prerequisite for offering confirmation, not something done after confirmation.",
+    ],
+    escalationPath:
+      "For offering creation delays, escalate to the planning team lead. For go/no-go delays, escalate to the course owner.",
+    relatedTools: ["create_offering_request", "reschedule_offering", "get_upcoming_offerings"],
+    exampleQuestions: [
+      "How does offering creation work?",
+      "What is the offering lifecycle?",
+      "What information is needed to create an offering?",
+      "What happens when an offering is rescheduled?",
+      "What is the go/no-go timeline for offerings?",
+    ],
+  },
+
+  planning_and_scheduling_knowledge: {
+    title: "Planning & Scheduling Requirements for Offerings",
+    domain: "offeringManagement",
+    overview:
+      "Explains the planning inputs needed before creating offerings for a new quarter, including historical data review, demand signals (express interest), faculty availability, go/no-go criteria, workspace readiness, hosting requirements, and template preparation.",
+    whenThisApplies:
+      "Use this resource when a Learning Advisor asks about planning requirements for upcoming offerings, what should be reviewed before quarter planning, or what historical data and dependencies to consider.",
+    keyRules: [
+      "Before creating offerings for a new quarter, review: prior year/quarter delivery data, express interest demand, faculty availability, venue/room availability, and budget approval status.",
+      "Go/no-go thresholds are typically: minimum 8 enrolled for virtual, minimum 12 for face-to-face (can vary by course).",
+      "Faculty must be confirmed before the offering can move from 'planning' to 'confirmed' status.",
+      "Workspace and hosting setup should be initiated as soon as the offering moves to 'confirmed'.",
+      "Templates (communications, enrollment confirmations, pre-work emails) should be reviewed and updated for the new quarter.",
+      "Dependencies: room booking → offering creation → enrollment open → go/no-go → hosting setup → delivery.",
+    ],
+    commonMisconceptions: [
+      "Planning is not just about picking dates — it requires cross-referencing availability of faculty, venue, and budget.",
+      "Express interest data does not automatically convert to enrollment — it is an input, not a commitment.",
+      "The planning timeline starts 8-12 weeks before the quarter, not at the quarter boundary.",
+    ],
+    relatedTools: ["create_offering_request", "get_upcoming_offerings", "get_express_interest_report", "book_training_room"],
+    exampleQuestions: [
+      "What are the planning requirements for upcoming offerings?",
+      "What should I review before quarter planning?",
+      "What historical data should be considered for planning?",
+      "What dependencies affect offering scheduling?",
+      "When should planning for next quarter start?",
+    ],
+  },
+};

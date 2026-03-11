@@ -1,0 +1,65 @@
+import type { ResourceContent } from "../types/common.js";
+
+export const workspaceResources: Record<string, ResourceContent> = {
+  workspace_creation_knowledge: {
+    title: "Workspace Creation & Planning Requirements",
+    domain: "workspace",
+    overview:
+      "Explains why a workspace master is mandatory for all course workspaces, how workspace requirements should be documented, and what should be discussed with the course owner before workspace creation. Covers MS Teams, SharePoint, and Moodle workspace types.",
+    whenThisApplies:
+      "Use this resource when a Learning Advisor asks about workspace planning, why workspace master is required, or how to document workspace needs before creation.",
+    keyRules: [
+      "A workspace master document must be completed before any workspace is created. This ensures consistent setup across all offerings.",
+      "The workspace master captures: workspace type (Teams, SharePoint, Moodle), required channels/folders, permission levels, content to preload, and integration requirements.",
+      "Workspace requirements should be discussed with the course owner during the course setup phase — not at offering creation time.",
+      "Workspace creation takes 2-3 business days. Requests submitted less than 5 days before session start may not be fulfilled in time.",
+      "Each offering gets its own workspace instance cloned from the workspace master template.",
+      "External participants may have restricted workspace access depending on security policies.",
+    ],
+    commonMisconceptions: [
+      "Workspace master is not optional for simple courses — even a basic Teams channel needs a master to ensure consistency.",
+      "Creating a workspace does not automatically grant access to all participants — permissions are configured separately.",
+      "Workspace and hosting are separate concerns — having a workspace does not mean hosting is covered.",
+    ],
+    escalationPath:
+      "If workspace creation is delayed or blocked by IT policies, escalate to the LEM workspace administration team and CC the DRC.",
+    relatedTools: [],
+    exampleQuestions: [
+      "Why is workspace master mandatory?",
+      "How should workspace requirements be documented?",
+      "What should be discussed before creating workspaces?",
+      "How long does workspace creation take?",
+      "What workspace types are available?",
+    ],
+  },
+
+  workspace_access_issue_knowledge: {
+    title: "Workspace Access Issues & Restrictions",
+    domain: "workspace",
+    overview:
+      "Explains known limitations for external participants accessing workspace content (SharePoint files, Teams chat, Moodle course areas), available workarounds, and the security/confidentiality constraints that drive these restrictions.",
+    whenThisApplies:
+      "Use this resource when a Learning Advisor reports that external, JVN, or OV participants can access the workspace but not specific content, chat, or file areas. For actual technical access issue resolution, use the resolve_technical_access_issue tool.",
+    keyRules: [
+      "External participants (including JVN/OV) may be able to join a Teams workspace but cannot access SharePoint-linked files, wiki pages, or certain chat features due to tenant-level security policies.",
+      "This is a known platform limitation — it is not a bug and cannot be 'fixed' by the LEM team.",
+      "Workarounds include: sharing files via OneDrive external sharing links, creating a separate content distribution channel (email or external-facing SharePoint site), or using Moodle as the primary content platform for external participants.",
+      "Confidential or IP-sensitive materials must never be shared via external workarounds without course owner approval.",
+      "If external participants need full workspace access, the course owner must raise an IT security exception request — this is a formal process with a 10+ business day turnaround.",
+    ],
+    commonMisconceptions: [
+      "This is not a permissions error — it is a tenant security policy. Re-adding the participant will not fix it.",
+      "Granting 'Guest' access in Teams does not override SharePoint-level restrictions.",
+      "The LEM team cannot override tenant security policies — only the IT Security team can grant exceptions.",
+    ],
+    escalationPath:
+      "If the course owner insists on full access for external participants, initiate an IT Security exception request. Allow 10+ business days.",
+    relatedTools: ["resolve_technical_access_issue"],
+    exampleQuestions: [
+      "Why can external participants access workspace but not chat/content?",
+      "What are the workarounds for workspace access issues?",
+      "What are the security constraints for external participants?",
+      "NOV and JV learners can see the workspace but not the files — what should I do?",
+    ],
+  },
+};
