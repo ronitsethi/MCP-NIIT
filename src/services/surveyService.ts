@@ -1,13 +1,16 @@
-import { mockDelay } from "../utils/mockDelay.js";
 import { buildToolResponse } from "../utils/response.js";
-import { MOCK_SURVEY_DATA } from "../data/mockData.js";
+import { query } from "../db.js";
 import type { ReopenSurveyWindowInput, GetSurveyReportInput, AmendSurveyClosureInput, GetExpressInterestReportInput } from "../schemas/surveySchemas.js";
 
 export async function reopenSurveyWindow(input: ReopenSurveyWindowInput) {
-  await mockDelay();
+  // Try to fetch survey data from DB for context
+  const offeringId = input.offeringId ?? "OFF-2001";
+  const surveyResult = await query("SELECT * FROM survey_data WHERE offering_id = $1", [offeringId]);
+  const surveyRow = surveyResult.rows[0];
+
   return buildToolResponse("reopen_survey_window", true, "Survey window reopen request has been submitted successfully.", {
     requestStatus: "submitted",
-    offeringId: input.offeringId ?? MOCK_SURVEY_DATA.offeringId,
+    offeringId: surveyRow?.offering_id ?? offeringId,
     courseId: input.courseId ?? "CRS-1001",
     effectiveOpenFrom: input.requestedOpenFrom ?? new Date().toISOString().split("T")[0],
     effectiveOpenUntil: input.requestedOpenUntil,
@@ -22,18 +25,27 @@ export async function reopenSurveyWindow(input: ReopenSurveyWindowInput) {
 }
 
 export async function getSurveyReport(input: GetSurveyReportInput) {
-  await mockDelay();
-  const base = MOCK_SURVEY_DATA;
+  const offeringId = input.offeringId ?? "OFF-2001";
+  const surveyResult = await query("SELECT * FROM survey_data WHERE offering_id = $1", [offeringId]);
+  const base = surveyResult.rows[0];
+
+  if (!base) {
+    return buildToolResponse("get_survey_report", false, `No survey data found for offering ${offeringId}.`, {
+      offeringId,
+      error: "Survey data not found.",
+    });
+  }
+
   return buildToolResponse("get_survey_report", true, `Survey ${input.reportType} report generated successfully.`, {
-    offeringId: input.offeringId ?? base.offeringId,
+    offeringId: base.offering_id,
     courseId: input.courseId ?? "CRS-1001",
     reportType: input.reportType,
-    totalParticipants: base.totalParticipants,
-    responsesReceived: base.responsesReceived,
-    responseRate: base.responseRate,
-    averageRating: base.averageRating,
-    surveyCloseDate: base.surveyCloseDate,
-    reportUrl: base.reportUrl,
+    totalParticipants: base.total_participants,
+    responsesReceived: base.responses_received,
+    responseRate: Number(base.response_rate),
+    averageRating: Number(base.average_rating),
+    surveyCloseDate: base.survey_close_date,
+    reportUrl: base.report_url,
     generatedAt: new Date().toISOString(),
   }, {
     relatedResource: "survey_management_knowledge",
@@ -41,10 +53,12 @@ export async function getSurveyReport(input: GetSurveyReportInput) {
 }
 
 export async function amendSurveyClosure(input: AmendSurveyClosureInput) {
-  await mockDelay();
+  const surveyResult = await query("SELECT * FROM survey_data WHERE offering_id = $1", [input.offeringId]);
+  const surveyRow = surveyResult.rows[0];
+
   return buildToolResponse("amend_survey_closure", true, "Survey closure amendment request has been submitted.", {
     offeringId: input.offeringId,
-    previousCloseDate: input.currentCloseDate ?? MOCK_SURVEY_DATA.surveyCloseDate,
+    previousCloseDate: input.currentCloseDate ?? surveyRow?.survey_close_date ?? "unknown",
     newRequestedCloseDate: input.requestedCloseDate,
     reason: input.reason,
     requestedBy: input.requestedBy,
@@ -57,7 +71,6 @@ export async function amendSurveyClosure(input: AmendSurveyClosureInput) {
 }
 
 export async function getExpressInterestReport(input: GetExpressInterestReportInput) {
-  await mockDelay();
   return buildToolResponse("get_express_interest_report", true, "Express interest report retrieved successfully.", {
     courseId: input.courseId,
     dateRange: input.dateRange ?? { startDate: "2026-01-01", endDate: "2026-03-31" },

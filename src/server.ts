@@ -99,7 +99,7 @@ export function createServer(): McpServer {
   registerCourseTools(server);
 
   logger.info(
-    `Server configured: ${Object.keys(ALL_RESOURCES).length} resources, 14 tools registered.`
+    `Server configured: ${Object.keys(ALL_RESOURCES).length} resources, 15 tools registered.`
   );
 
   return server;

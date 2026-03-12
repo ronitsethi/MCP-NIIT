@@ -1,10 +1,7 @@
-import { mockDelay } from "../utils/mockDelay.js";
 import { buildToolResponse } from "../utils/response.js";
 import type { ProcessLoiRequestInput } from "../schemas/loiSchemas.js";
 
 export async function processLoiRequest(input: ProcessLoiRequestInput) {
-  await mockDelay();
-
   const guidanceMap: Record<string, string> = {
     save_failure: "A save failure is typically caused by session timeout or network issues. Advise the learner to clear browser cache, use a supported browser (Chrome/Edge), and retry. If the issue persists, a support ticket has been raised.",
     draft_not_generated: "Draft generation depends on all prerequisite fields being completed. Verify that all required course completion and assessment fields are filled. A support ticket has been created for backend investigation.",

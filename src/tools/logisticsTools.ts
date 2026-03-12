@@ -1,6 +1,6 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { BookTrainingRoomSchema } from "../schemas/logisticsSchemas.js";
-import { bookTrainingRoom } from "../services/logisticsService.js";
+import { BookTrainingRoomSchema, GetRoomBookingsSchema } from "../schemas/logisticsSchemas.js";
+import { bookTrainingRoom, getRoomBookings } from "../services/logisticsService.js";
 import { logger } from "../utils/logger.js";
 
 export function registerLogisticsTools(server: McpServer) {
@@ -20,6 +20,7 @@ WHEN NOT TO USE:
 - If the question is about catering for the room/session — use the catering_services_knowledge resource (catering is separate from room booking).
 - If the question is about workspace setup (virtual workspace, not physical room) — use workspace_creation_knowledge resource.
 - If the question is about virtual hosting setup — use the hosting_services_knowledge resource.
+- If the user is asking what rooms are booked or checking existing bookings — use get_room_bookings instead.
 
 INPUT DETAILS:
 - location: REQUIRED — physical campus/location name.
@@ -40,6 +41,46 @@ EXAMPLE PROMPTS:
     async (input) => {
       logger.info("Tool called: book_training_room", input);
       const result = await bookTrainingRoom(input);
+      return { content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }] };
+    }
+  );
+
+  server.tool(
+    "get_room_bookings",
+    `Query existing room bookings by date and/or location.
+
+WHAT IT DOES:
+Looks up all room bookings in the system, optionally filtered by a specific date and/or location. Returns the full booking details for each matching booking including room ID, location, capacity, booking date, who requested it, course ID, booking reference, and status.
+
+WHEN TO USE:
+- A user asks what rooms are booked on a specific date (e.g., "What rooms are booked on April 14, 2026?").
+- A user wants to check room availability for a location by seeing existing bookings.
+- A Learning Advisor wants to review all bookings at a particular campus or hub.
+- A user wants to look up a specific booking or verify a booking reference.
+
+WHEN NOT TO USE:
+- If the user wants to CREATE a new booking — use book_training_room instead.
+- If the question is about catering — use the catering_services_knowledge resource.
+- If the question is about virtual hosting — use the hosting_services_knowledge resource.
+
+INPUT DETAILS:
+- date: Optional — date in ISO format (YYYY-MM-DD) to filter bookings for a specific day.
+- location: Optional — campus/location name (partial match supported, e.g., "Singapore" will match "Singapore Hub").
+- At least one of date or location should be provided for meaningful results, but both are optional.
+
+OUTPUT:
+List of bookings with room details, booking references, requesters, and course IDs.
+
+EXAMPLE PROMPTS:
+- "What rooms are booked on April 14, 2026?"
+- "Show me all room bookings at Singapore Hub"
+- "Are there any room bookings for London next month?"
+- "Which rooms are reserved on 2026-04-14?"
+- "Check all bookings at Singapore for April"`,
+    GetRoomBookingsSchema.shape,
+    async (input) => {
+      logger.info("Tool called: get_room_bookings", input);
+      const result = await getRoomBookings(input);
       return { content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }] };
     }
   );

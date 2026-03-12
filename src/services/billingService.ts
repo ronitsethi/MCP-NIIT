@@ -1,11 +1,10 @@
-import { mockDelay } from "../utils/mockDelay.js";
 import { buildToolResponse } from "../utils/response.js";
-import { MOCK_COURSES } from "../data/mockData.js";
+import { query } from "../db.js";
 import type { CheckCourseBillingInfoInput } from "../schemas/billingSchemas.js";
 
 export async function checkCourseBillingInfo(input: CheckCourseBillingInfoInput) {
-  await mockDelay();
-  const course = MOCK_COURSES.find((c) => c.courseId === input.courseId);
+  const result = await query("SELECT * FROM courses WHERE course_id = $1", [input.courseId]);
+  const course = result.rows[0];
 
   if (!course) {
     return buildToolResponse("check_course_billing_info", false, `No course found with ID ${input.courseId}.`, {
@@ -13,6 +12,12 @@ export async function checkCourseBillingInfo(input: CheckCourseBillingInfoInput)
       error: "Course not found. Please verify the course ID.",
     });
   }
+
+  const fees = {
+    internal: Number(course.fee_internal),
+    external: Number(course.fee_external),
+    jvn: Number(course.fee_jvn),
+  };
 
   const participantType = input.participantType ?? "internal";
   const billingScenarios: Record<string, { billingOwner: string; notes: string }> = {
@@ -22,29 +27,29 @@ export async function checkCourseBillingInfo(input: CheckCourseBillingInfoInput)
     },
     external: {
       billingOwner: "External participant's sponsoring organization",
-      notes: `External fee: $${course.fees.external}. Invoice is generated post-completion. Cancellation fees may apply per cancellation policy.`,
+      notes: `External fee: $${fees.external}. Invoice is generated post-completion. Cancellation fees may apply per cancellation policy.`,
     },
     jvn: {
       billingOwner: "Joint venture entity per inter-company billing agreement",
-      notes: `JVN fee: $${course.fees.jvn}. Cross-entity billing is handled via the inter-company settlement process. Confirm billing entity code before enrollment.`,
+      notes: `JVN fee: $${fees.jvn}. Cross-entity billing is handled via the inter-company settlement process. Confirm billing entity code before enrollment.`,
     },
     ov: {
       billingOwner: "Overseas venture entity per regional billing agreement",
-      notes: `OV participants follow the same billing path as JVN. Fee: $${course.fees.jvn}. Verify regional billing codes.`,
+      notes: `OV participants follow the same billing path as JVN. Fee: $${fees.jvn}. Verify regional billing codes.`,
     },
   };
 
   const scenario = billingScenarios[participantType] ?? billingScenarios["internal"];
 
   return buildToolResponse("check_course_billing_info", true, `Billing information retrieved for ${course.title}.`, {
-    courseId: course.courseId,
+    courseId: course.course_id,
     courseTitle: course.title,
     category: course.category,
     participantType,
     billingOwner: scenario.billingOwner,
     billingNotes: scenario.notes,
     billingScenario: input.billingScenario ?? "standard",
-    feeStructure: course.fees,
+    feeStructure: fees,
     escalationPath: "For billing disputes or exceptions, contact the Finance Shared Services team.",
   }, {
     relatedResource: "billing_and_fee_management_knowledge",

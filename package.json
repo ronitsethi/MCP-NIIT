@@ -8,21 +8,31 @@
     "dev": "tsx src/index.ts",
     "build": "tsc",
     "start": "node dist/index.js",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "db:seed": "node -r dotenv/config dist/data/seedDb.js"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.12.1",
+    "dotenv": "^17.3.1",
+    "pg": "^8.20.0",
     "zod": "^3.24.2"
   },
   "devDependencies": {
     "@types/node": "^22.13.10",
+    "@types/pg": "^8.18.0",
     "tsx": "^4.19.3",
     "typescript": "^5.8.2"
   },
   "engines": {
     "node": ">=18.0.0"
   },
-  "keywords": ["mcp", "learning-advisor", "lms", "niit", "flowise"],
+  "keywords": [
+    "mcp",
+    "learning-advisor",
+    "lms",
+    "niit",
+    "flowise"
+  ],
   "license": "UNLICENSED",
   "private": true
 }

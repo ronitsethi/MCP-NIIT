@@ -8,4 +8,10 @@ export const BookTrainingRoomSchema = z.object({
   courseId: z.string().optional().describe("Related course identifier for context"),
 });
 
+export const GetRoomBookingsSchema = z.object({
+  date: z.string().optional().describe("Filter bookings by date in ISO format (YYYY-MM-DD). If omitted, all dates are returned."),
+  location: z.string().optional().describe("Filter bookings by location/campus name (partial match supported). If omitted, all locations are returned."),
+});
+
 export type BookTrainingRoomInput = z.infer<typeof BookTrainingRoomSchema>;
+export type GetRoomBookingsInput = z.infer<typeof GetRoomBookingsSchema>;

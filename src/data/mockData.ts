@@ -110,7 +110,37 @@ export const MOCK_ATTENDANCE = [
 ];
 
 export const MOCK_ROOMS = [
-  { roomId: "RM-501", location: "Singapore Hub", capacity: 30, status: "available" },
-  { roomId: "RM-502", location: "London Office", capacity: 20, status: "available" },
-  { roomId: "RM-503", location: "New York Center", capacity: 25, status: "booked" },
+  { roomId: "RM-501", location: "Singapore Hub", capacity: 30 },
+  { roomId: "RM-502", location: "London Office", capacity: 20 },
+  { roomId: "RM-503", location: "New York Center", capacity: 25 },
+];
+
+export const MOCK_BOOKINGS = [
+  {
+    bookingId: "BKG-001",
+    roomId: "RM-501",
+    bookingDate: "2026-04-14",
+    requestedBy: "Priya Kapoor",
+    courseId: "CRS-1001",
+    bookingReference: "BK-MMMJYKR0",
+    status: "confirmed",
+  },
+  {
+    bookingId: "BKG-002",
+    roomId: "RM-503",
+    bookingDate: "2026-04-14",
+    requestedBy: "James Morton",
+    courseId: "CRS-1002",
+    bookingReference: "BK-N7X2PLQ1",
+    status: "confirmed",
+  },
+  {
+    bookingId: "BKG-003",
+    roomId: "RM-502",
+    bookingDate: "2026-06-09",
+    requestedBy: "Yuki Tanaka",
+    courseId: "CRS-1001",
+    bookingReference: "BK-R3KFWM42",
+    status: "confirmed",
+  },
 ];

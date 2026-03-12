@@ -1,11 +1,10 @@
-import { mockDelay } from "../utils/mockDelay.js";
 import { buildToolResponse } from "../utils/response.js";
-import { MOCK_COURSES } from "../data/mockData.js";
+import { query } from "../db.js";
 import type { GetCourseFeeInfoInput } from "../schemas/courseSchemas.js";
 
 export async function getCourseFeeInfo(input: GetCourseFeeInfoInput) {
-  await mockDelay();
-  const course = MOCK_COURSES.find((c) => c.courseId === input.courseId);
+  const result = await query("SELECT * FROM courses WHERE course_id = $1", [input.courseId]);
+  const course = result.rows[0];
 
   if (!course) {
     return buildToolResponse("get_course_fee_info", false, `No course found with ID ${input.courseId}.`, {
@@ -21,15 +20,15 @@ export async function getCourseFeeInfo(input: GetCourseFeeInfoInput) {
   };
 
   return buildToolResponse("get_course_fee_info", true, `Fee information retrieved for ${course.title}.`, {
-    courseId: course.courseId,
+    courseId: course.course_id,
     courseTitle: course.title,
     category: course.category,
-    deliveryMode: course.deliveryMode,
-    durationDays: course.durationDays,
+    deliveryMode: course.delivery_mode,
+    durationDays: course.duration_days,
     feeStructure: {
-      internal: course.fees.internal,
-      external: course.fees.external,
-      jvn_ov: course.fees.jvn,
+      internal: Number(course.fee_internal),
+      external: Number(course.fee_external),
+      jvn_ov: Number(course.fee_jvn),
     },
     participantType: input.participantType ?? "all",
     scenarioNotes: input.scenario ? (scenarioNotes[input.scenario] ?? "No specific notes for this scenario.") : null,

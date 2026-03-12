@@ -118,7 +118,7 @@ export const DOMAIN_GROUPS = {
       "go_no_go_policy_knowledge",
       "cancellation_policy_knowledge",
     ],
-    tools: ["book_training_room"],
+    tools: ["book_training_room", "get_room_bookings"],
   },
   postDelivery: {
     label: "Post-Delivery & Review",

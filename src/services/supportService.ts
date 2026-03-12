@@ -1,10 +1,7 @@
-import { mockDelay } from "../utils/mockDelay.js";
 import { buildToolResponse } from "../utils/response.js";
 import type { ResolveTechnicalAccessIssueInput } from "../schemas/supportSchemas.js";
 
 export async function resolveTechnicalAccessIssue(input: ResolveTechnicalAccessIssueInput) {
-  await mockDelay();
-
   const escalationMap: Record<string, string> = {
     moodle: "LMS Support Team (Tier-2)",
     sharepoint: "Microsoft 365 Administration Team",
