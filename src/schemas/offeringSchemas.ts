@@ -16,6 +16,7 @@ export const RescheduleOfferingSchema = z.object({
   offeringId: z.string().describe("Offering identifier to be rescheduled"),
   newStartDate: z.string().describe("New start date in ISO format"),
   newEndDate: z.string().optional().describe("New end date in ISO format (defaults to single-day if omitted)"),
+  newDeliveryMode: z.enum(["ILT", "VILT"]).optional().describe("Optional new delivery mode if changing from ILT to VILT or vice-versa"),
   reason: z.string().min(5).describe("Reason for rescheduling (min 5 characters)"),
   requestedBy: z.string().describe("Name or email of the Learning Advisor making the request"),
 });

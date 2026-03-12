@@ -56,14 +56,17 @@ EXAMPLE PROMPTS:
 
   server.tool(
     "reschedule_offering",
-    `Submit a request to reschedule an existing offering to new dates.
+    `Submit a request to reschedule an existing offering to new dates, or change its delivery mode.
+
+IMPORTANT BEHAVIOR:
+Before calling this tool, you MUST explicitly ask the user if they also want to change the modality (to ILT or VILT) as part of the reschedule request. Do not assume the modality remains unchanged without asking.
 
 WHAT IT DOES:
-Submits a reschedule request that will trigger coordination with enrolled learners, faculty, and venue contacts. Returns the old and new schedule, impact assessment, and coordination status.
+Submits a reschedule request that will trigger coordination with enrolled learners, faculty, and venue contacts. It can also handle transition between Instructor-Led (ILT) and Virtual (VILT) modalities. Returns the old and new schedule, modality impact, impact assessment, and coordination status.
 
 WHEN TO USE:
 - An existing offering needs new dates due to faculty unavailability, venue issues, or business needs.
-- A Learning Advisor needs to move an offering to different dates.
+- A Learning Advisor needs to move an offering to different dates, or switch its modality to ILT or VILT.
 
 WHEN NOT TO USE:
 - If the offering should be cancelled entirely — that follows the cancellation workflow.
@@ -74,17 +77,18 @@ INPUT DETAILS:
 - offeringId: REQUIRED — the offering to reschedule.
 - newStartDate: REQUIRED — new start date in ISO format.
 - newEndDate: Optional new end date.
+- newDeliveryMode: Optional updated delivery mode ('ILT' or 'VILT').
 - reason: REQUIRED — justification (min 5 chars).
 - requestedBy: REQUIRED — requesting Learning Advisor.
 
 OUTPUT:
-Previous and new dates, enrollment impact assessment, coordination status, and stakeholder notification plan.
+Previous and new dates, modality changes, enrollment impact assessment, coordination status, and stakeholder notification plan.
 
 EXAMPLE PROMPTS:
 - "Need to reschedule offering OFF-2001 to May"
 - "Please update the dates for the London session"
 - "Reschedule this offering — faculty is unavailable on the original dates"
-- "Move OFF-2002 from June to July"`,
+- "Move OFF-2002 from June to July and change it to VILT"`,
     RescheduleOfferingSchema.shape,
     async (input) => {
       logger.info("Tool called: reschedule_offering", input);

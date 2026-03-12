@@ -51,6 +51,7 @@ export async function rescheduleOffering(input: RescheduleOfferingInput) {
     previousEndDate: existing?.end_date ?? "unknown",
     newStartDate: input.newStartDate,
     newEndDate: input.newEndDate ?? input.newStartDate,
+    newDeliveryMode: input.newDeliveryMode ?? existing?.delivery_mode ?? "unchanged",
     reason: input.reason,
     requestedBy: input.requestedBy,
     rescheduleStatus: "pending_coordination",
@@ -59,7 +60,9 @@ export async function rescheduleOffering(input: RescheduleOfferingInput) {
       ? `${existing.enrolled_count} learners currently enrolled; ${existing.waitlist_count} on waitlist. All will be notified.`
       : "Unable to retrieve current enrollment data for impact assessment.",
   }, {
-    nextRecommendedStep: "Monitor the coordination status. Faculty and venue confirmation are prerequisites for finalizing the new dates.",
+    nextRecommendedStep: input.newDeliveryMode
+      ? "Monitor the coordination status. Modality change requires confirming new venue or virtual platform. Faculty and venue confirmation are prerequisites."
+      : "Monitor the coordination status. Faculty and venue confirmation are prerequisites for finalizing the new dates.",
     relatedResource: "offering_management_knowledge",
   });
 }
